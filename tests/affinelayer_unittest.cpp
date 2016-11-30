@@ -34,7 +34,7 @@ TEST(AffineLayerTest, ForwardPass) {
 
   for (int r=0; r<correct_out.rows(); ++r)
       for (int c=0; c<correct_out.cols(); ++c)
-          EXPECT_FLOAT_EQ((*a.out)(r,c),correct_out(r,c)) << "Affine layer is computed incorrectly at row " << r << " column " << c ;
+          EXPECT_FLOAT_EQ((*a.out)(r,c),correct_out(r,c));
 
 }
 
@@ -50,19 +50,9 @@ TEST(AffineLayerTest, BackwardPass) {
   a.W = std::make_shared<RowMajorMatrix>(RowMajorMatrix::Random(in_size, out_size));
   a.b = std::make_shared<VectorXf>(VectorXf::Random(out_size));
 
-  // Fill values
-  int x_size = a.X->rows()*a.X->cols();
-  Map<RowVectorXf> xvec (a.X->data(), x_size);
-  xvec = Eigen::RowVectorXf::LinSpaced(x_size, -0.1, 0.5);
-
-  int w_size = a.W->rows()*a.W->cols();
-  Map<RowVectorXf> wvec (a.W->data(), w_size);
-  wvec = RowVectorXf::LinSpaced(w_size, -0.2, 0.3);
-
-  (*a.b) = VectorXf::LinSpaced(out_size, -0.3, 0.1);
-
   a.backward();
 
+  // Do gradcheck
 
 
 }
