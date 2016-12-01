@@ -6,12 +6,12 @@
 
 using namespace Eigen;
 
-typedef Matrix<float,Dynamic,Dynamic, RowMajor> RowMajorMatrix;
-
+template <typename T>
 class Layer
 {
+    typedef Matrix<T, Dynamic, Dynamic, RowMajor> RowMajorMatrix;
+    typedef Matrix<T, 1, Dynamic> RowMajorVector;
 public:
-    Layer();
 
     virtual void forward() = 0;
     virtual void backward() = 0;
@@ -19,7 +19,7 @@ public:
     // Inputs
     std::shared_ptr<RowMajorMatrix> X;
     std::shared_ptr<RowMajorMatrix> W;
-    std::shared_ptr<VectorXf> b;
+    std::shared_ptr<RowMajorVector> b;
 
     // Forward pass output
     std::shared_ptr<RowMajorMatrix> out;
@@ -30,7 +30,7 @@ public:
     // Backward pass gradients
     std::shared_ptr<RowMajorMatrix> dX;
     std::shared_ptr<RowMajorMatrix> dW;
-    std::shared_ptr<VectorXf> db;
+    std::shared_ptr<RowMajorVector> db;
 };
 
 #endif // LAYER_H

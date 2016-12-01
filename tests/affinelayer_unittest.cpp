@@ -15,7 +15,7 @@ TEST(AffineLayerTest, ForwardPass) {
   int in_size  = 4*5*6;
   int batch_size = 2;
 
-  AffineLayer a;
+  AffineLayer<double> a;
   a.X = std::make_shared<RowMajorMatrix>(batch_size,in_size);
   a.W = std::make_shared<RowMajorMatrix>(in_size, out_size);
   a.b = std::make_shared<VectorXf>(out_size);
@@ -46,19 +46,21 @@ TEST(AffineLayerTest, BackwardPass) {
   int in_size  = 2*3;
   int batch_size = 10;
 
-  AffineLayer a;
-  a.X = std::make_shared<RowMajorMatrix>(RowMajorMatrix::Random(batch_size, in_size));
-  a.W = std::make_shared<RowMajorMatrix>(RowMajorMatrix::Random(in_size, out_size));
+  AffineLayer<double> a;
+  a.X = std::make_shared<RowMajorMatrixDouble>(RowMajorMatrix::Random(batch_size, in_size));
+  a.W = std::make_shared<RowMajorMatrixDouble>(RowMajorMatrix::Random(in_size, out_size));
   a.b = std::make_shared<VectorXf>(VectorXf::Random(out_size));
 
-  a.dout = std::make_shared<RowMajorMatrix>(RowMajorMatrix::Random(batch_size,out_size));
+  a.dout = std::make_shared<RowMajorMatrixDouble>(RowMajorMatrixDouble::Random(batch_size,out_size));
 
   a.backward();
-  auto grad = a.out;
+  auto dX = *a.dX;
 
   // Do gradcheck
   auto num_grad = eval_numerical_gradient_matrix(&a, *a.X, *a.dout);
-  std::cout << "Showing numerical gradient" << std::endl;
+  //std::cout << "Showing numerical gradient" << std::endl;
   std::cout << num_grad << std::endl;
+  std::cout << " ====== " << std::endl;
+  std::cout << dX << std::endl;
 
 }
