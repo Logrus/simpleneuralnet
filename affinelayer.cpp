@@ -14,5 +14,9 @@ void AffineLayer::forward()
 
 void AffineLayer::backward()
 {
+    // dX
 
+    // dW
+
+    // db
 }

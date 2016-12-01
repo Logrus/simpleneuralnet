@@ -1,4 +1,5 @@
 #include "../affinelayer.h"
+#include "../gradientcheck.h"
 #include "gtest/gtest.h"
 #include <memory>
 #include <eigen3/Eigen/Dense>
@@ -42,7 +43,7 @@ TEST(AffineLayerTest, ForwardPass) {
 TEST(AffineLayerTest, BackwardPass) {
 
   int out_size = 5;
-  int in_size  = 4*5*6;
+  int in_size  = 2*3;
   int batch_size = 10;
 
   AffineLayer a;
@@ -50,9 +51,14 @@ TEST(AffineLayerTest, BackwardPass) {
   a.W = std::make_shared<RowMajorMatrix>(RowMajorMatrix::Random(in_size, out_size));
   a.b = std::make_shared<VectorXf>(VectorXf::Random(out_size));
 
+  a.dout = std::make_shared<RowMajorMatrix>(RowMajorMatrix::Random(batch_size,out_size));
+
   a.backward();
+  auto grad = a.out;
 
   // Do gradcheck
-
+  auto num_grad = eval_numerical_gradient_matrix(&a, *a.X, *a.dout);
+  std::cout << "Showing numerical gradient" << std::endl;
+  std::cout << num_grad << std::endl;
 
 }
