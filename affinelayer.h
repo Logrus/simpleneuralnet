@@ -7,14 +7,16 @@
 
 using namespace Eigen;
 
-typedef Matrix<float,Dynamic,Dynamic, RowMajor> RowMajorMatrix;
-
-class AffineLayer : public Layer
+template <typename T>
+class AffineLayer : public Layer<T>
 {
 public:
-    AffineLayer();
     void forward();
     void backward();
+
+    using Layer<T>::RowMajorMatrix;
+    using Layer<T>::RowMajorVector;
 };
+
 
 #endif // AFFINELAYER_H
